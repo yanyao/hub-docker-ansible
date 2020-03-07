@@ -1,0 +1,48 @@
+---
+# tasks file for hub-teaching
+#
+- name: check vg exists
+  command: vgdisplay "{{vgname}}"
+  register: vgdisplay
+  failed_when: vgdisplay.rc != 0
+
+- name: make sure docker network exists
+  docker_network:
+    name: "{{hub_network}}"
+
+- name: create JupyterHub configuration home
+  file: 
+    state: directory
+    path: "{{hub_config_path}}"
+    
+
+
+- name: generate jupyterhub_config.py
+  template: 
+    src: "jupyterhub_config.py"
+    dest: "{{hub_config_path}}/jupyterhub_config.py"
+  notify:
+    - restart hub container
+
+- name: copy cull idle scripts
+  copy:
+    src: "cull_idle_servers.py"
+    dest: "{{hub_config_path}}/cull_idle_servers.py"
+
+- name: create hub docker container
+  docker_container:
+    name: "{{hub_hostname}}"
+    image:  "{{hub_docker_image}}"
+    state: present
+    recreate: yes
+    published_ports:
+      - 8000:8000
+      - 8081:8081
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{hub_config_path}}:/srv/jupyterhub"
+    networks:
+      - name: "{{ hub_network }}"
+  notify:
+    - restart hub container
+

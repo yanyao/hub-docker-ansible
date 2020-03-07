@@ -1,0 +1,6 @@
+---
+- name: restart hub container
+  docker_container:
+    name: "{{ hub_hostname}}"
+    state: started
+    restart: yes

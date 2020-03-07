@@ -1,0 +1,23 @@
+---
+
+#
+#
+hub_docker_image: openjupyter/jupyterhub-ppc64le:1.1.0
+hub_hostname: hub-teaching2
+volume_prefix: hub-teaching
+hub_config_path: /opt/{{hub_hostname}}
+vgname: vg0
+base_image: openjupyter/jupyter-base-cpu-ppc64le:v6.0.0
+hub_network: hub-teaching
+admin_users:
+  - yanyao
+  - admin
+auth_class: native
+
+cpu_period: 
+cpu_quota:
+
+mem_limit: 
+volume_size: 2G
+
+cull_timeout: 3600
