@@ -24,8 +24,15 @@ c.Authenticator.admin_users = admin_users
 
 {% if auth_class == 'native' %}
 c.JupyterHub.authenticator_class = 'nativeauthenticator.NativeAuthenticator'
-{% else %}
+{% elif auth_class == 'ldap' %}
 c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
+c.LDAPAuthenticator.server_address='ldap'
+c.LDAPAuthenticator.lookup_dn = False
+c.LDAPAuthenticator.bind_dn_template = [ {% for item in ldap.bind_dn_template %} "{{item}}", {% endfor %} ]
+c.LDAPAuthenticator.escape_userdn = False
+{% else %}
+
+c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
 {% endif %}
 
 import docker
@@ -44,6 +51,7 @@ c.DockerSpawner.extra_host_config=dict(cpu_period={{cpu_period|int}},cpu_quota={
 c.Spawner.mem_limt="{{mem_limit}}"
 {% endif %}
 
+{% if cull_enable %}
 import sys
 c.JupyterHub.services = [
     {
@@ -52,3 +60,7 @@ c.JupyterHub.services = [
         'command': [sys.executable, 'cull_idle_servers.py', '--timeout={{cull_timeout|int}}'],
     }
 ]
+{%endif %}
+
+
+

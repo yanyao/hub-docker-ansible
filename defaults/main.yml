@@ -20,4 +20,9 @@ cpu_quota:
 mem_limit: 
 volume_size: 2G
 
+cull_enable: True
 cull_timeout: 3600
+
+ldap:
+  bind_dn_template: 
+    - "cn={username},dc=example,dc=com"
