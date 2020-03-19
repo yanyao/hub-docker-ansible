@@ -35,6 +35,7 @@
     image:  "{{hub_docker_image}}"
     state: present
     recreate: yes
+    restart_policy: "unless-stopped"
     published_ports:
       - 8000:8000
       - 8081:8081

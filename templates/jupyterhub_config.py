@@ -62,5 +62,8 @@ c.JupyterHub.services = [
 ]
 {%endif %}
 
+{% if hub_extra_config %}
+{{ hub_extra_config }}
+{% endif %}
 
 
