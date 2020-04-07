@@ -48,7 +48,7 @@ c.DockerSpawner.extra_host_config=dict(cpu_period={{cpu_period|int}},cpu_quota={
 {% endif %}
 
 {% if mem_limit %}
-c.Spawner.mem_limt="{{mem_limit}}"
+c.Spawner.mem_limit="{{mem_limit}}"
 {% endif %}
 
 {% if cull_enable %}
